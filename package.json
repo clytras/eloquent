@@ -1,0 +1,44 @@
+{
+  "name": "@lytrax/eloquent",
+  "version": "1.0.0",
+  "description": "Nodejs Eloquent Models with MySQL adapter",
+  "bin": {
+    "relation": "dist/cli/index.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "local-test": "mocha --require babel-register --require tests/setup/local-setup tests/unit --recursive",
+    "build": "babel modules --out-dir dist --no-comments",
+    "local-cover": "istanbul cover ./node_modules/.bin/_mocha -- --require babel-register --require tests/setup/local-setup tests/unit --recursive",
+    "test": "istanbul cover --include-all-sources ./node_modules/.bin/_mocha -- --require babel-register --require tests/setup/setup tests/unit --recursive && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "prepublish": "npm run build"
+  },
+  "author": "Christos Lytras",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nekdev/nek-eloquent"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/runtime": "^7.4.5",
+    "pluralize": "^8.0.0"
+  },
+  "peerDependencies": {
+    "mysql": "^2.17.1",
+    "dotenv": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-transform-regenerator": "^7.4.5",
+    "@babel/register": "7.4.4",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.4",
+    "mocha": "^6.1.4",
+    "mysql": "^2.17.1",
+    "sinon": "^7.3.2"
+  }
+}
