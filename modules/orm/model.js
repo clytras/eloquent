@@ -48,16 +48,24 @@ export default class Model {
     return adapter.create({ data, model: this })
   }
 
+  static save() {
+    return adapter.save({ model: this })
+  }
+
   /*
     update a row in the database
     ex Model.upate({ name: 'bob' })
   */
-  static update(data) {
+  static update(data = null) {
     return adapter.update({ data, model: this })
   }
 
-  static createOrUpdate(data) {
-    return adapter.createOrUpdate({ data, model: this })
+  static createOrUpdate(data, updateData = {}) {
+    return adapter.createOrUpdate({ data, updateData, model: this })
+  }
+
+  static delete(data = null) {
+    return adapter.delete({ data, model: this })
   }
 
   //Query builder methods return a builder instance that is chainable

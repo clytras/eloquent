@@ -71,11 +71,25 @@ class MysqlAdapter {
     })
   }
 
-  update({ model, data }){
-    var query = `UPDATE ${model.tableName()} SET ? WHERE ${model.primaryKey()} = ?`
+  save({ model }) {
+    this.update({ model });
+  }
+
+  update({ model, data } = {}) {
+    const pk = model.primaryKey();
+
+    if(!data) {
+      if(model.values) {
+        data = model.values;
+      } else {
+        return new Promise((resolve, reject) => reject({ code: 'no-pk' }));
+      }
+    }
+
+    var query = `UPDATE ${model.tableName()} SET ? WHERE ${pk} = ?`
 
     return new Promise((resolve, reject) => {
-      connection.query(query, [data, data[model.primaryKey()]], (error, result) => {
+      connection.query(query, [data, data[pk]], (error, result) => {
         if(error) {
           if(error.fatal){
             handleDisconnect();
@@ -93,9 +107,53 @@ class MysqlAdapter {
     })
   }
 
-  createOrUpdate({ model, data }) {
+  createOrUpdate({ model, data, updateData = {}}) {
     return new Promise((resolve, reject) => {
-      connection.query(`INSERT INTO ${model.tableName()} SET ? ON DUPLICATE KEY UPDATE ?`, [data, data], (error, result) => {
+
+      let _updatedData = { ...data };
+      for(let updated in updateData) {
+        if(updateData[updated] === undefined) {
+          if(updated in _updatedData) {
+            delete _updatedData[updated];
+          }
+        } else {
+          _updatedData[updated] = updateData[updated];
+        }
+      }
+  
+      connection.query(`INSERT INTO ${model.tableName()} SET ? ON DUPLICATE KEY UPDATE ?`, [data, _updatedData], (error, result) => {
+        if(error) {
+          if(error.fatal){
+            handleDisconnect();
+          }
+          return reject(error);
+        }
+        var err = {
+          message:"Not affect any row"
+        };
+        if (!result.affectedRows > 0){
+          reject(err);
+        }
+        resolve(true, model)
+      })
+    })
+  }
+
+  delete({ model, data } = {}) {
+    const pk = model.primaryKey();
+
+    if(!data) {
+      if(model.values) {
+        data = model.values;
+      } else {
+        return new Promise((resolve, reject) => reject({ code: 'no-pk' }));
+      }
+    }
+    
+    var query = `DELETE FROM ${model.tableName()} WHERE ${pk} = ?`
+
+    return new Promise((resolve, reject) => {
+      connection.query(query, [data[pk]], (error, result) => {
         if(error) {
           if(error.fatal){
             handleDisconnect();

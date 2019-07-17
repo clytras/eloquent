@@ -11,11 +11,19 @@ Relation takes inspiration from knex and sequelize, but the end goal to to compl
 
 Read [this wiki page](https://github.com/navjobs/relation/wiki/Comparison-with-other-ORMs---Query-Builders) for why this is better than knex and sequelize. The gist is this: syntax, and lazy loading relationships.
 
+NPM:
 ```
-npm install relation --save
+npm install @lytrax/eloquent --save
 
-//if using mysql driver
+// if using mysql driver
 npm install mysql --save
+```
+Yarn:
+```
+yarn add @lytrax/eloquent
+
+// if using mysql driver
+yarn add mysql
 ```
 
 ### Setup
@@ -47,8 +55,6 @@ export default class Chat extends Model {
   }
   */
 }
-
-
 ```
 
 ### Using the Model
@@ -66,14 +72,15 @@ async function getChats {
 
 #### Supported methods
 
-- `.all()` returns everything in the table
-- `.where({ fieldName: 'value' })` returns any matching results
-- `.create({ field: 'value'})` create a new row
-- `.update({ field: 'value',primaryKey:'value'})` update an existing row
-- `.createOrUpdate({ field: 'value',primaryKey:'value'})` create if not exists, or update an existing row
-- `.select('column', 'column2')` contrain rows to select
-- `.first()` returns first results
-- `.limit(5)` limits the query
+- `.all()`<br>Returns everything in the table
+- `.where({ fieldName: 'value' })`<br>Returns any matching results
+- `.create({ field: 'value' })`<br>Create a new row
+- `.update({ field: 'value', primaryKey: 'value' })`<br>Update an existing row
+- `.createOrUpdate({ field: 'value', primaryKey: 'value' })`<br>Create if not exists, or update an existing row
+- `.delete({ primaryKey: 'value' })`<br>Create if not exists, or update an existing row
+- `.select('column', 'column2')`<br>Contrain rows to select
+- `.first()`<br>Returns first results
+- `.limit(5)`<br>Limits the query
 
 ### Query Building
 
@@ -126,7 +133,6 @@ let chat = await Chat.first()
 let user = await chat.user
 
 expect(user.name).to.be.equal('Bob')
-
 ```
 
 #### One to Many Example
@@ -149,8 +155,6 @@ let user = await User.first()
 
 //has many results return a query builder instance
 let chats = await user.chats.first()
-
-
 ```
 
 ### Migrations

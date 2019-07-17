@@ -1,6 +1,6 @@
 {
   "name": "@lytrax/eloquent",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Nodejs Eloquent Models with MySQL adapter",
   "bin": {
     "relation": "dist/cli/index.js"
